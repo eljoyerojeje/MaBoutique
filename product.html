@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails du Produit - MaBoutique</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .product-detail {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .product-images {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .thumbnail-images {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+        }
+
+        .thumbnail {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: var(--transition);
+        }
+
+        .thumbnail:hover,
+        .thumbnail.active {
+            border-color: var(--primary-color);
+        }
+
+        .product-info h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-meta {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .product-price-large {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stock-status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .stock-status.in-stock {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .stock-status.out-of-stock {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .product-description {
+            line-height: 1.8;
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .quantity-selector label {
+            font-weight: 600;
+        }
+
+        .quantity-input {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quantity-input button {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background-color: var(--light-gray);
+            color: var(--dark);
+            font-size: 1.25rem;
+        }
+
+        .quantity-input button:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .quantity-input input {
+            width: 80px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .action-buttons .btn {
+            flex: 1;
+            font-size: 1.125rem;
+            padding: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .product-detail {
+                grid-template-columns: 1fr;
+            }
+
+            .main-image {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-top">
+            <div class="container">
+                <div>
+                    <span>📧 contact@boutique.com</span>
+                    <span>📞 +33 1 23 45 67 89</span>
+                </div>
+                <div>
+                    <a href="login.html" class="auth-link">Connexion</a>
+                    <a href="register.html" class="auth-link">Inscription</a>
+                    <a href="profile.html" class="user-link" style="display: none;">Mon Compte</a>
+                    <a href="#" id="logout-btn" class="user-link" style="display: none;">Déconnexion</a>
+                    <a href="admin.html" class="admin-link" style="display: none;">Admin</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-main">
+            <div class="container">
+                <button class="mobile-menu-toggle">☰</button>
+                <a href="index.html" class="logo">
+                    🛍️ MaBoutique
+                </a>
+
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Rechercher des produits...">
+                    <button onclick="searchProducts()">🔍</button>
+                </div>
+
+                <div class="header-icons">
+                    <a href="wishlist.html" class="header-icon">
+                        ♥
+                        <span id="wishlist-badge" class="badge">0</span>
+                    </a>
+                    <a href="cart.html" class="header-icon">
+                        🛒
+                        <span id="cart-badge" class="badge">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav-main">
+            <div class="container">
+                <a href="index.html">🏠 Accueil</a>
+                <a href="products.html">🛍️ Tous les Produits</a>
+                <a href="products.html?category=cat-1">💻 Électronique</a>
+                <a href="products.html?category=cat-2">👔 Vêtements</a>
+                <a href="products.html?category=cat-3">🏠 Maison</a>
+                <a href="products.html?category=cat-4">⚽ Sports</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="section">
+        <div class="container">
+            <div id="product-detail-container">
+                <!-- Product details will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>À Propos</h3>
+                    <p>MaBoutique est votre destination pour le shopping en ligne.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Liens Rapides</h3>
+                    <ul>
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="products.html">Produits</a></li>
+                        <li><a href="cart.html">Panier</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Service Client</h3>
+                    <ul>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Livraison</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Suivez-nous</h3>
+                    <ul>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Twitter</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 MaBoutique. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        let currentProduct = null;
+        let currentQuantity = 1;
+        let currentImageIndex = 0;
+
+        async function loadProductDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+
+            if (!productId) {
+                window.location.href = 'products.html';
+                return;
+            }
+
+            const products = await API.getProducts();
+            currentProduct = products.find(p => p.id === productId);
+
+            if (!currentProduct) {
+                document.getElementById('product-detail-container').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">❌</div>
+                        <h3>Produit non trouvé</h3>
+                        <p>Le produit que vous recherchez n'existe pas ou a été supprimé.</p>
+                        <a href="products.html" class="btn btn-primary">Retour aux produits</a>
+                    </div>
+                `;
+                return;
+            }
+
+            displayProduct();
+        }
+
+        function displayProduct() {
+            const images = [currentProduct.image, ...(currentProduct.images || [])];
+            const stockClass = currentProduct.stock > 0 ? 'in-stock' : 'out-of-stock';
+            const stockText = currentProduct.stock > 0 ? `✓ En stock (${currentProduct.stock} disponibles)` : '✗ Rupture de stock';
+            const isWishlisted = Wishlist.isInWishlist(currentProduct.id);
+
+            const html = `
+                <div class="product-detail">
+                    <div class="product-images">
+                        <img src="${images[currentImageIndex]}" alt="${currentProduct.name}" class="main-image" id="main-image">
+                        ${images.length > 1 ? `
+                            <div class="thumbnail-images">
+                                ${images.map((img, index) => `
+                                    <img src="${img}" alt="Image ${index + 1}" 
+                                         class="thumbnail ${index === currentImageIndex ? 'active' : ''}"
+                                         onclick="changeImage(${index})">
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="product-info">
+                        <h1>${currentProduct.name}</h1>
+                        
+                        <div class="product-meta">
+                            <div class="product-rating">
+                                <span class="stars">${Utils.generateStars(currentProduct.rating || 0)}</span>
+                                <span class="rating-count">(${currentProduct.reviews_count || 0} avis)</span>
+                            </div>
+                            <span class="stock-status ${stockClass}">${stockText}</span>
+                        </div>
+
+                        <div class="product-price-large">${Utils.formatPrice(currentProduct.price)}</div>
+
+                        <div class="product-description">
+                            <p>${currentProduct.description}</p>
+                        </div>
+
+                        ${currentProduct.stock > 0 ? `
+                            <div class="quantity-selector">
+                                <label>Quantité :</label>
+                                <div class="quantity-input">
+                                    <button onclick="updateQuantity(-1)">-</button>
+                                    <input type="number" id="quantity" value="1" min="1" max="${currentProduct.stock}" readonly>
+                                    <button onclick="updateQuantity(1)">+</button>
+                                </div>
+                            </div>
+
+                            <div class="action-buttons">
+                                <button class="btn btn-primary" onclick="addToCart()">
+                                    🛒 Ajouter au panier
+                                </button>
+                                <button class="btn ${isWishlisted ? 'btn-danger' : 'btn-outline'}" onclick="toggleWishlist()">
+                                    ♥ ${isWishlisted ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                                </button>
+                            </div>
+                        ` : `
+                            <div class="alert alert-danger">
+                                Ce produit est actuellement en rupture de stock.
+                            </div>
+                        `}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('product-detail-container').innerHTML = html;
+        }
+
+        function changeImage(index) {
+            currentImageIndex = index;
+            const images = [currentProduct.image, ...(currentProduct.images || [])];
+            document.getElementById('main-image').src = images[index];
+
+            // Update thumbnails
+            document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
+                if (i === index) {
+                    thumb.classList.add('active');
+                } else {
+                    thumb.classList.remove('active');
+                }
+            });
+        }
+
+        function updateQuantity(change) {
+            const input = document.getElementById('quantity');
+            let newQuantity = parseInt(input.value) + change;
+            
+            if (newQuantity < 1) newQuantity = 1;
+            if (newQuantity > currentProduct.stock) newQuantity = currentProduct.stock;
+            
+            input.value = newQuantity;
+            currentQuantity = newQuantity;
+        }
+
+        function addToCart() {
+            const quantity = parseInt(document.getElementById('quantity').value);
+            Cart.add(currentProduct, quantity);
+        }
+
+        function toggleWishlist() {
+            Wishlist.toggle(currentProduct);
+            displayProduct(); // Refresh to update button
+        }
+
+        function searchProducts() {
+            const query = document.getElementById('search-input').value;
+            if (query) {
+                window.location.href = `products.html?search=${encodeURIComponent(query)}`;
+            }
+        }
+
+        document.getElementById('search-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchProducts();
+            }
+        });
+
+        // Initialize
+        loadProductDetails();
+    </script>
+</body>
+</html>
