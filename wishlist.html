@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Favoris - MaBoutique</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="container">
+                <div>
+                    <span>📧 contact@boutique.com</span>
+                    <span>📞 +33 1 23 45 67 89</span>
+                </div>
+                <div>
+                    <a href="login.html" class="auth-link">Connexion</a>
+                    <a href="register.html" class="auth-link">Inscription</a>
+                    <a href="profile.html" class="user-link" style="display: none;">Mon Compte</a>
+                    <a href="#" id="logout-btn" class="user-link" style="display: none;">Déconnexion</a>
+                    <a href="admin.html" class="admin-link" style="display: none;">Admin</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-main">
+            <div class="container">
+                <button class="mobile-menu-toggle">☰</button>
+                <a href="index.html" class="logo">
+                    🛍️ MaBoutique
+                </a>
+
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Rechercher des produits...">
+                    <button onclick="searchProducts()">🔍</button>
+                </div>
+
+                <div class="header-icons">
+                    <a href="wishlist.html" class="header-icon">
+                        ♥
+                        <span id="wishlist-badge" class="badge">0</span>
+                    </a>
+                    <a href="cart.html" class="header-icon">
+                        🛒
+                        <span id="cart-badge" class="badge">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav-main">
+            <div class="container">
+                <a href="index.html">🏠 Accueil</a>
+                <a href="products.html">🛍️ Tous les Produits</a>
+                <a href="products.html?category=cat-1">💻 Électronique</a>
+                <a href="products.html?category=cat-2">👔 Vêtements</a>
+                <a href="products.html?category=cat-3">🏠 Maison</a>
+                <a href="products.html?category=cat-4">⚽ Sports</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="section">
+        <div class="container">
+            <h1 class="section-title">♥ Mes Favoris</h1>
+
+            <div class="products-grid" id="wishlist-products">
+                <!-- Wishlist products will be loaded here -->
+            </div>
+
+            <div id="empty-wishlist" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">♥</div>
+                <h3>Votre liste de favoris est vide</h3>
+                <p>Ajoutez des produits à vos favoris pour les retrouver facilement</p>
+                <a href="products.html" class="btn btn-primary">Découvrir nos produits</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>À Propos</h3>
+                    <p>MaBoutique est votre destination pour le shopping en ligne.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Liens Rapides</h3>
+                    <ul>
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="products.html">Produits</a></li>
+                        <li><a href="cart.html">Panier</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Service Client</h3>
+                    <ul>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Livraison</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Suivez-nous</h3>
+                    <ul>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Twitter</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 MaBoutique. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        function displayWishlist() {
+            const wishlist = APP_STATE.wishlist;
+            const productsDiv = document.getElementById('wishlist-products');
+            const emptyDiv = document.getElementById('empty-wishlist');
+
+            if (wishlist.length === 0) {
+                productsDiv.style.display = 'none';
+                emptyDiv.style.display = 'block';
+                return;
+            }
+
+            productsDiv.innerHTML = wishlist.map(product => UI.createProductCard(product)).join('');
+            productsDiv.style.display = 'grid';
+            emptyDiv.style.display = 'none';
+        }
+
+        function searchProducts() {
+            const query = document.getElementById('search-input').value;
+            if (query) {
+                window.location.href = `products.html?search=${encodeURIComponent(query)}`;
+            }
+        }
+
+        // Initialize
+        displayWishlist();
+    </script>
+</body>
+</html>
