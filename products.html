@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogue - MaBoutique</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-top">
+            <div class="container">
+                <div>
+                    <span>📧 contact@boutique.com</span>
+                    <span>📞 +33 1 23 45 67 89</span>
+                </div>
+                <div>
+                    <a href="login.html" class="auth-link">Connexion</a>
+                    <a href="register.html" class="auth-link">Inscription</a>
+                    <a href="profile.html" class="user-link" style="display: none;">Mon Compte</a>
+                    <a href="#" id="logout-btn" class="user-link" style="display: none;">Déconnexion</a>
+                    <a href="admin.html" class="admin-link" style="display: none;">Admin</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-main">
+            <div class="container">
+                <button class="mobile-menu-toggle">☰</button>
+                <a href="index.html" class="logo">
+                    🛍️ MaBoutique
+                </a>
+
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Rechercher des produits...">
+                    <button onclick="searchProducts()">🔍</button>
+                </div>
+
+                <div class="header-icons">
+                    <a href="wishlist.html" class="header-icon">
+                        ♥
+                        <span id="wishlist-badge" class="badge">0</span>
+                    </a>
+                    <a href="cart.html" class="header-icon">
+                        🛒
+                        <span id="cart-badge" class="badge">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav-main">
+            <div class="container">
+                <a href="index.html">🏠 Accueil</a>
+                <a href="products.html" class="active">🛍️ Tous les Produits</a>
+                <a href="products.html?category=cat-1">💻 Électronique</a>
+                <a href="products.html?category=cat-2">👔 Vêtements</a>
+                <a href="products.html?category=cat-3">🏠 Maison</a>
+                <a href="products.html?category=cat-4">⚽ Sports</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="section">
+        <div class="container">
+            <h1 class="section-title" id="page-title">Tous les Produits</h1>
+
+            <!-- Filters -->
+            <div class="filters-section">
+                <div class="filters-container">
+                    <div class="filter-group">
+                        <label for="category-filter">Catégorie</label>
+                        <select id="category-filter" onchange="applyFilters()">
+                            <option value="">Toutes les catégories</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="sort-filter">Trier par</label>
+                        <select id="sort-filter" onchange="applyFilters()">
+                            <option value="name">Nom (A-Z)</option>
+                            <option value="name-desc">Nom (Z-A)</option>
+                            <option value="price-asc">Prix croissant</option>
+                            <option value="price-desc">Prix décroissant</option>
+                            <option value="rating">Meilleures notes</option>
+                            <option value="newest">Plus récents</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="price-min">Prix minimum</label>
+                        <input type="number" id="price-min" placeholder="0€" min="0" onchange="applyFilters()">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="price-max">Prix maximum</label>
+                        <input type="number" id="price-max" placeholder="10000€" min="0" onchange="applyFilters()">
+                    </div>
+
+                    <div class="filter-group" style="align-self: flex-end;">
+                        <button class="btn btn-secondary" onclick="resetFilters()">Réinitialiser</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div id="products-count" style="margin-bottom: 1rem; color: var(--gray);"></div>
+            <div class="products-grid" id="products-container">
+                <!-- Products will be loaded dynamically -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">🔍</div>
+                <h3>Aucun produit trouvé</h3>
+                <p>Essayez de modifier vos critères de recherche</p>
+                <button class="btn btn-primary" onclick="resetFilters()">Réinitialiser les filtres</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>À Propos</h3>
+                    <p>MaBoutique est votre destination pour le shopping en ligne. Nous offrons une large sélection de produits de qualité à des prix compétitifs.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Liens Rapides</h3>
+                    <ul>
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="products.html">Produits</a></li>
+                        <li><a href="cart.html">Panier</a></li>
+                        <li><a href="profile.html">Mon Compte</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Service Client</h3>
+                    <ul>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Livraison</a></li>
+                        <li><a href="#">Retours</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Suivez-nous</h3>
+                    <ul>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 MaBoutique. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        let allProducts = [];
+        let allCategories = [];
+        let currentFilters = {
+            category: '',
+            sort: 'name',
+            priceMin: 0,
+            priceMax: Infinity,
+            search: ''
+        };
+
+        // Load categories for filter
+        async function loadCategories() {
+            allCategories = await API.getCategories();
+            const select = document.getElementById('category-filter');
+            
+            allCategories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.id;
+                option.textContent = cat.name;
+                select.appendChild(option);
+            });
+        }
+
+        // Load products
+        async function loadProducts() {
+            allProducts = await API.getProducts();
+            
+            // Get URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const category = urlParams.get('category');
+            const search = urlParams.get('search');
+
+            if (category) {
+                currentFilters.category = category;
+                document.getElementById('category-filter').value = category;
+                
+                // Update page title
+                const cat = allCategories.find(c => c.id === category);
+                if (cat) {
+                    document.getElementById('page-title').textContent = cat.name;
+                }
+            }
+
+            if (search) {
+                currentFilters.search = search;
+                document.getElementById('search-input').value = search;
+                document.getElementById('page-title').textContent = `Résultats pour "${search}"`;
+            }
+
+            displayProducts();
+        }
+
+        // Display products based on filters
+        function displayProducts() {
+            let filteredProducts = [...allProducts];
+
+            // Filter by category
+            if (currentFilters.category) {
+                filteredProducts = filteredProducts.filter(p => p.category === currentFilters.category);
+            }
+
+            // Filter by search
+            if (currentFilters.search) {
+                const searchLower = currentFilters.search.toLowerCase();
+                filteredProducts = filteredProducts.filter(p => 
+                    p.name.toLowerCase().includes(searchLower) ||
+                    p.description.toLowerCase().includes(searchLower)
+                );
+            }
+
+            // Filter by price range
+            filteredProducts = filteredProducts.filter(p => 
+                p.price >= currentFilters.priceMin && 
+                p.price <= currentFilters.priceMax
+            );
+
+            // Sort products
+            switch (currentFilters.sort) {
+                case 'name':
+                    filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'name-desc':
+                    filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
+                    break;
+                case 'price-asc':
+                    filteredProducts.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-desc':
+                    filteredProducts.sort((a, b) => b.price - a.price);
+                    break;
+                case 'rating':
+                    filteredProducts.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+                    break;
+                case 'newest':
+                    filteredProducts.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
+                    break;
+            }
+
+            // Display products
+            const container = document.getElementById('products-container');
+            const emptyState = document.getElementById('empty-state');
+            const countDiv = document.getElementById('products-count');
+
+            if (filteredProducts.length > 0) {
+                container.innerHTML = filteredProducts.map(product => UI.createProductCard(product)).join('');
+                container.style.display = 'grid';
+                emptyState.style.display = 'none';
+                countDiv.textContent = `${filteredProducts.length} produit(s) trouvé(s)`;
+            } else {
+                container.style.display = 'none';
+                emptyState.style.display = 'block';
+                countDiv.textContent = '';
+            }
+        }
+
+        // Apply filters
+        function applyFilters() {
+            currentFilters.category = document.getElementById('category-filter').value;
+            currentFilters.sort = document.getElementById('sort-filter').value;
+            currentFilters.priceMin = parseFloat(document.getElementById('price-min').value) || 0;
+            currentFilters.priceMax = parseFloat(document.getElementById('price-max').value) || Infinity;
+            
+            displayProducts();
+        }
+
+        // Reset filters
+        function resetFilters() {
+            currentFilters = {
+                category: '',
+                sort: 'name',
+                priceMin: 0,
+                priceMax: Infinity,
+                search: ''
+            };
+
+            document.getElementById('category-filter').value = '';
+            document.getElementById('sort-filter').value = 'name';
+            document.getElementById('price-min').value = '';
+            document.getElementById('price-max').value = '';
+            document.getElementById('search-input').value = '';
+            document.getElementById('page-title').textContent = 'Tous les Produits';
+
+            // Clear URL parameters
+            window.history.pushState({}, '', 'products.html');
+
+            displayProducts();
+        }
+
+        // Search products
+        function searchProducts() {
+            const query = document.getElementById('search-input').value;
+            currentFilters.search = query;
+            
+            if (query) {
+                document.getElementById('page-title').textContent = `Résultats pour "${query}"`;
+            } else {
+                document.getElementById('page-title').textContent = 'Tous les Produits';
+            }
+            
+            displayProducts();
+        }
+
+        // Allow enter key for search
+        document.getElementById('search-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchProducts();
+            }
+        });
+
+        // Initialize page
+        async function init() {
+            await loadCategories();
+            await loadProducts();
+        }
+
+        init();
+    </script>
+</body>
+</html>
