@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiement - MaBoutique</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-main">
+            <div class="container">
+                <a href="index.html" class="logo">
+                    🛍️ MaBoutique
+                </a>
+                <div style="text-align: center; flex: 1;">
+                    <h2>Paiement Sécurisé 🔒</h2>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="section">
+        <div class="container">
+            <div class="checkout-container">
+                <!-- Left Column: Forms -->
+                <div>
+                    <!-- Shipping Address -->
+                    <div class="checkout-section">
+                        <h3>📍 Adresse de livraison</h3>
+                        <form id="shipping-form">
+                            <div class="form-group">
+                                <label for="name">Nom complet *</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="address">Adresse *</label>
+                                <input type="text" id="address" name="address" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="city">Ville *</label>
+                                <input type="text" id="city" name="city" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="postal-code">Code postal *</label>
+                                <input type="text" id="postal-code" name="postal-code" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="country">Pays *</label>
+                                <input type="text" id="country" name="country" value="France" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone">Téléphone *</label>
+                                <input type="tel" id="phone" name="phone" required>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="checkout-section">
+                        <h3>💳 Mode de paiement</h3>
+                        
+                        <div class="payment-methods">
+                            <label class="payment-method active" onclick="selectPaymentMethod('card')">
+                                <input type="radio" name="payment" value="card" checked>
+                                <div class="payment-icon">💳</div>
+                                <div>
+                                    <strong>Carte bancaire</strong>
+                                    <p style="margin: 0; color: var(--gray); font-size: 0.875rem;">
+                                        Visa, Mastercard, American Express
+                                    </p>
+                                </div>
+                            </label>
+
+                            <label class="payment-method" onclick="selectPaymentMethod('paypal')">
+                                <input type="radio" name="payment" value="paypal">
+                                <div class="payment-icon">🅿️</div>
+                                <div>
+                                    <strong>PayPal</strong>
+                                    <p style="margin: 0; color: var(--gray); font-size: 0.875rem;">
+                                        Paiement sécurisé via PayPal
+                                    </p>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Card Payment Form -->
+                        <div id="card-payment-form" class="payment-form" style="margin-top: 1.5rem;">
+                            <div class="form-group">
+                                <label for="card-number">Numéro de carte *</label>
+                                <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19">
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div class="form-group">
+                                    <label for="expiry">Date d'expiration *</label>
+                                    <input type="text" id="expiry" placeholder="MM/AA" maxlength="5">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cvv">CVV *</label>
+                                    <input type="text" id="cvv" placeholder="123" maxlength="3">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="card-name">Nom sur la carte *</label>
+                                <input type="text" id="card-name" placeholder="JEAN DUPONT">
+                            </div>
+                        </div>
+
+                        <!-- PayPal Payment -->
+                        <div id="paypal-payment-form" class="payment-form" style="display: none; margin-top: 1.5rem;">
+                            <div class="alert alert-info">
+                                Vous serez redirigé vers PayPal pour finaliser votre paiement de manière sécurisée.
+                            </div>
+                            <div style="text-align: center; padding: 2rem;">
+                                <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg" alt="PayPal" style="max-width: 200px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Order Summary -->
+                <div>
+                    <div class="checkout-section">
+                        <h3>📦 Récapitulatif de commande</h3>
+                        
+                        <div id="order-items"></div>
+
+                        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--light-gray);">
+                            <div class="order-summary-item">
+                                <span>Sous-total</span>
+                                <span id="subtotal">0,00 €</span>
+                            </div>
+                            <div class="order-summary-item">
+                                <span>Livraison</span>
+                                <span id="shipping">0,00 €</span>
+                            </div>
+                            <div class="order-summary-item" style="font-size: 1.25rem; font-weight: 700; border-bottom: none; color: var(--primary-color);">
+                                <span>Total</span>
+                                <span id="total">0,00 €</span>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem; font-size: 1.125rem; padding: 1rem;" onclick="processPayment()">
+                            🔒 Payer maintenant
+                        </button>
+
+                        <div style="text-align: center; margin-top: 1rem; color: var(--gray); font-size: 0.875rem;">
+                            <p>🔒 Paiement 100% sécurisé</p>
+                            <p>Vos informations sont protégées par cryptage SSL</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        let selectedPaymentMethod = 'card';
+
+        // Check if cart is empty
+        if (APP_STATE.cart.length === 0) {
+            window.location.href = 'cart.html';
+        }
+
+        // Pre-fill user data if logged in
+        if (Auth.isLoggedIn()) {
+            const user = APP_STATE.currentUser;
+            document.getElementById('name').value = user.name || '';
+            document.getElementById('address').value = user.address || '';
+            document.getElementById('city').value = user.city || '';
+            document.getElementById('postal-code').value = user.postal_code || '';
+            document.getElementById('country').value = user.country || 'France';
+            document.getElementById('phone').value = user.phone || '';
+        }
+
+        // Display order summary
+        function displayOrderSummary() {
+            const cart = APP_STATE.cart;
+            const subtotal = Cart.getTotal();
+            const shipping = subtotal > 50 ? 0 : 5.99;
+            const total = subtotal + shipping;
+
+            const itemsHtml = cart.map(item => `
+                <div class="order-summary-item">
+                    <span>${item.name} x${item.quantity}</span>
+                    <span>${Utils.formatPrice(item.price * item.quantity)}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('order-items').innerHTML = itemsHtml;
+            document.getElementById('subtotal').textContent = Utils.formatPrice(subtotal);
+            document.getElementById('shipping').textContent = shipping === 0 ? 'GRATUITE' : Utils.formatPrice(shipping);
+            document.getElementById('total').textContent = Utils.formatPrice(total);
+        }
+
+        // Select payment method
+        function selectPaymentMethod(method) {
+            selectedPaymentMethod = method;
+
+            // Update active state
+            document.querySelectorAll('.payment-method').forEach(pm => {
+                pm.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+
+            // Show/hide payment forms
+            document.getElementById('card-payment-form').style.display = method === 'card' ? 'block' : 'none';
+            document.getElementById('paypal-payment-form').style.display = method === 'paypal' ? 'block' : 'none';
+        }
+
+        // Format card number input
+        document.getElementById('card-number')?.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\s/g, '');
+            value = value.match(/.{1,4}/g)?.join(' ') || value;
+            e.target.value = value;
+        });
+
+        // Format expiry date
+        document.getElementById('expiry')?.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.slice(0, 2) + '/' + value.slice(2, 4);
+            }
+            e.target.value = value;
+        });
+
+        // Process payment
+        async function processPayment() {
+            // Validate shipping form
+            const shippingForm = document.getElementById('shipping-form');
+            if (!shippingForm.checkValidity()) {
+                shippingForm.reportValidity();
+                return;
+            }
+
+            // Validate payment method
+            if (selectedPaymentMethod === 'card') {
+                const cardNumber = document.getElementById('card-number').value;
+                const expiry = document.getElementById('expiry').value;
+                const cvv = document.getElementById('cvv').value;
+                const cardName = document.getElementById('card-name').value;
+
+                if (!cardNumber || !expiry || !cvv || !cardName) {
+                    Utils.showAlert('Veuillez remplir tous les champs de paiement', 'danger');
+                    return;
+                }
+
+                // Basic validation
+                if (cardNumber.replace(/\s/g, '').length !== 16) {
+                    Utils.showAlert('Numéro de carte invalide', 'danger');
+                    return;
+                }
+
+                if (!expiry.match(/^\d{2}\/\d{2}$/)) {
+                    Utils.showAlert('Date d\'expiration invalide (format MM/AA)', 'danger');
+                    return;
+                }
+
+                if (cvv.length !== 3) {
+                    Utils.showAlert('CVV invalide', 'danger');
+                    return;
+                }
+            }
+
+            // Create order
+            const subtotal = Cart.getTotal();
+            const shipping = subtotal > 50 ? 0 : 5.99;
+            const total = subtotal + shipping;
+
+            const orderData = {
+                user_id: Auth.isLoggedIn() ? APP_STATE.currentUser.id : 'guest',
+                items: JSON.stringify(APP_STATE.cart.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity
+                }))),
+                total: total,
+                status: 'pending',
+                payment_method: selectedPaymentMethod,
+                shipping_address: JSON.stringify({
+                    name: document.getElementById('name').value,
+                    address: document.getElementById('address').value,
+                    city: document.getElementById('city').value,
+                    postal_code: document.getElementById('postal-code').value,
+                    country: document.getElementById('country').value,
+                    phone: document.getElementById('phone').value
+                }),
+                order_date: new Date().toISOString()
+            };
+
+            // Simulate payment processing
+            Utils.showAlert('Traitement du paiement en cours...', 'info');
+
+            setTimeout(async () => {
+                const order = await API.createOrder(orderData);
+
+                if (order) {
+                    // Clear cart
+                    Cart.clear();
+
+                    // Show success message
+                    Utils.showAlert('Paiement réussi ! Commande créée.', 'success');
+
+                    // Redirect to success page
+                    setTimeout(() => {
+                        window.location.href = `order-success.html?orderId=${order.id}`;
+                    }, 1500);
+                } else {
+                    Utils.showAlert('Erreur lors du traitement du paiement', 'danger');
+                }
+            }, 2000);
+        }
+
+        // Initialize
+        displayOrderSummary();
+    </script>
+</body>
+</html>
