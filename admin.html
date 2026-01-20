@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - MaBoutique</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="container">
+                <div>
+                    <span>🔧 Interface Administrateur</span>
+                </div>
+                <div>
+                    <a href="index.html">← Retour au site</a>
+                    <a href="#" id="logout-btn">Déconnexion</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-main">
+            <div class="container">
+                <a href="admin.html" class="logo">
+                    🛍️ MaBoutique Admin
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="section">
+        <div class="container">
+            <div class="admin-container">
+                <div class="admin-header">
+                    <h1>Tableau de bord administrateur</h1>
+                    <button class="btn btn-primary" onclick="showAddProductModal()">
+                        ➕ Ajouter un produit
+                    </button>
+                </div>
+
+                <!-- Tabs -->
+                <div class="admin-tabs">
+                    <button class="admin-tab active" onclick="switchAdminTab('products')">Produits</button>
+                    <button class="admin-tab" onclick="switchAdminTab('orders')">Commandes</button>
+                    <button class="admin-tab" onclick="switchAdminTab('categories')">Catégories</button>
+                </div>
+
+                <!-- Products Tab -->
+                <div id="admin-tab-products" class="tab-content active">
+                    <div class="admin-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Nom</th>
+                                    <th>Prix</th>
+                                    <th>Catégorie</th>
+                                    <th>Stock</th>
+                                    <th>Vedette</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-table-body">
+                                <!-- Products will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Orders Tab -->
+                <div id="admin-tab-orders" class="tab-content">
+                    <div class="admin-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Numéro</th>
+                                    <th>Date</th>
+                                    <th>Client</th>
+                                    <th>Total</th>
+                                    <th>Statut</th>
+                                    <th>Paiement</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-table-body">
+                                <!-- Orders will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Categories Tab -->
+                <div id="admin-tab-categories" class="tab-content">
+                    <div class="admin-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Icon</th>
+                                    <th>Nom</th>
+                                    <th>Description</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categories-table-body">
+                                <!-- Categories will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add/Edit Product Modal -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeProductModal()">✕</button>
+            <h2 id="modal-title">Ajouter un produit</h2>
+            
+            <form id="product-form">
+                <div class="form-group">
+                    <label for="product-name">Nom du produit *</label>
+                    <input type="text" id="product-name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-description">Description *</label>
+                    <textarea id="product-description" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-price">Prix (€) *</label>
+                    <input type="number" id="product-price" step="0.01" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-category">Catégorie *</label>
+                    <select id="product-category" required>
+                        <!-- Categories will be loaded here -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-image">URL de l'image principale *</label>
+                    <input type="url" id="product-image" required placeholder="https://...">
+                </div>
+
+                <div class="form-group">
+                    <label for="product-stock">Stock *</label>
+                    <input type="number" id="product-stock" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-rating">Note (0-5)</label>
+                    <input type="number" id="product-rating" min="0" max="5" step="0.1" value="4.5">
+                </div>
+
+                <div class="form-group">
+                    <label for="product-reviews">Nombre d'avis</label>
+                    <input type="number" id="product-reviews" min="0" value="0">
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="product-featured">
+                        Produit vedette
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeProductModal()">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Check if admin
+        if (!Auth.isLoggedIn() || !Auth.isAdmin()) {
+            Utils.showAlert('Accès refusé. Vous devez être administrateur.', 'danger');
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
+        }
+
+        let currentEditingProductId = null;
+        let allProducts = [];
+        let allCategories = [];
+        let allOrders = [];
+
+        // Switch admin tab
+        function switchAdminTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.admin-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById(`admin-tab-${tab}`).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tab === 'products') loadProducts();
+            if (tab === 'orders') loadOrders();
+            if (tab === 'categories') loadCategories();
+        }
+
+        // Load products
+        async function loadProducts() {
+            allProducts = await API.getProducts();
+            allCategories = await API.getCategories();
+
+            const tbody = document.getElementById('products-table-body');
+            
+            if (allProducts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem;">Aucun produit</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = allProducts.map(product => {
+                const category = allCategories.find(c => c.id === product.category);
+                return `
+                    <tr>
+                        <td><img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/60'"></td>
+                        <td><strong>${product.name}</strong></td>
+                        <td>${Utils.formatPrice(product.price)}</td>
+                        <td>${category ? category.name : 'N/A'}</td>
+                        <td>${product.stock}</td>
+                        <td>${product.featured ? '⭐' : '-'}</td>
+                        <td class="admin-actions">
+                            <button class="btn btn-primary" onclick='editProduct(${JSON.stringify(product).replace(/'/g, "\\'")})'>
+                                ✏️ Modifier
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteProduct('${product.id}', '${product.name}')">
+                                🗑️ Supprimer
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Load orders
+        async function loadOrders() {
+            const response = await fetch('tables/orders?limit=100');
+            const result = await response.json();
+            allOrders = result.data || [];
+
+            const tbody = document.getElementById('orders-table-body');
+            
+            if (allOrders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem;">Aucune commande</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = allOrders.map(order => `
+                <tr>
+                    <td><strong>#${order.id.substr(-8)}</strong></td>
+                    <td>${Utils.formatDate(order.order_date)}</td>
+                    <td>${order.user_id}</td>
+                    <td>${Utils.formatPrice(order.total)}</td>
+                    <td><span class="order-status ${order.status}">${order.status}</span></td>
+                    <td>${order.payment_method === 'card' ? '💳 Carte' : '🅿️ PayPal'}</td>
+                    <td class="admin-actions">
+                        <select onchange="updateOrderStatus('${order.id}', this.value)" style="padding: 0.5rem;">
+                            <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>En attente</option>
+                            <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>En traitement</option>
+                            <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Expédié</option>
+                            <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Livré</option>
+                        </select>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Load categories
+        async function loadCategories() {
+            allCategories = await API.getCategories();
+
+            const tbody = document.getElementById('categories-table-body');
+            
+            if (allCategories.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 2rem;">Aucune catégorie</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = allCategories.map(cat => `
+                <tr>
+                    <td style="font-size: 2rem;">${cat.icon}</td>
+                    <td><strong>${cat.name}</strong></td>
+                    <td>${cat.description}</td>
+                    <td class="admin-actions">
+                        <button class="btn btn-primary">✏️ Modifier</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Show add product modal
+        async function showAddProductModal() {
+            currentEditingProductId = null;
+            document.getElementById('modal-title').textContent = 'Ajouter un produit';
+            document.getElementById('product-form').reset();
+            
+            // Load categories in select
+            allCategories = await API.getCategories();
+            const select = document.getElementById('product-category');
+            select.innerHTML = allCategories.map(cat => 
+                `<option value="${cat.id}">${cat.name}</option>`
+            ).join('');
+
+            document.getElementById('product-modal').classList.add('active');
+        }
+
+        // Edit product
+        async function editProduct(product) {
+            currentEditingProductId = product.id;
+            document.getElementById('modal-title').textContent = 'Modifier le produit';
+
+            // Load categories in select
+            allCategories = await API.getCategories();
+            const select = document.getElementById('product-category');
+            select.innerHTML = allCategories.map(cat => 
+                `<option value="${cat.id}" ${cat.id === product.category ? 'selected' : ''}>${cat.name}</option>`
+            ).join('');
+
+            // Fill form
+            document.getElementById('product-name').value = product.name;
+            document.getElementById('product-description').value = product.description;
+            document.getElementById('product-price').value = product.price;
+            document.getElementById('product-category').value = product.category;
+            document.getElementById('product-image').value = product.image;
+            document.getElementById('product-stock').value = product.stock;
+            document.getElementById('product-rating').value = product.rating || 4.5;
+            document.getElementById('product-reviews').value = product.reviews_count || 0;
+            document.getElementById('product-featured').checked = product.featured || false;
+
+            document.getElementById('product-modal').classList.add('active');
+        }
+
+        // Close modal
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.remove('active');
+            currentEditingProductId = null;
+        }
+
+        // Delete product
+        async function deleteProduct(id, name) {
+            if (!confirm(`Êtes-vous sûr de vouloir supprimer le produit "${name}" ?`)) {
+                return;
+            }
+
+            const success = await API.deleteProduct(id);
+            if (success) {
+                Utils.showAlert('Produit supprimé avec succès', 'success');
+                loadProducts();
+            } else {
+                Utils.showAlert('Erreur lors de la suppression', 'danger');
+            }
+        }
+
+        // Update order status
+        async function updateOrderStatus(orderId, newStatus) {
+            try {
+                await fetch(`tables/orders/${orderId}`, {
+                    method: 'PATCH',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ status: newStatus })
+                });
+                Utils.showAlert('Statut mis à jour', 'success');
+                loadOrders();
+            } catch (error) {
+                Utils.showAlert('Erreur lors de la mise à jour', 'danger');
+            }
+        }
+
+        // Handle product form submission
+        document.getElementById('product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const productData = {
+                name: document.getElementById('product-name').value,
+                description: document.getElementById('product-description').value,
+                price: parseFloat(document.getElementById('product-price').value),
+                category: document.getElementById('product-category').value,
+                image: document.getElementById('product-image').value,
+                images: [document.getElementById('product-image').value],
+                stock: parseInt(document.getElementById('product-stock').value),
+                rating: parseFloat(document.getElementById('product-rating').value),
+                reviews_count: parseInt(document.getElementById('product-reviews').value),
+                featured: document.getElementById('product-featured').checked
+            };
+
+            let result;
+            if (currentEditingProductId) {
+                result = await API.updateProduct(currentEditingProductId, productData);
+            } else {
+                result = await API.createProduct(productData);
+            }
+
+            if (result) {
+                Utils.showAlert(
+                    currentEditingProductId ? 'Produit modifié avec succès' : 'Produit créé avec succès',
+                    'success'
+                );
+                closeProductModal();
+                loadProducts();
+            } else {
+                Utils.showAlert('Erreur lors de l\'enregistrement', 'danger');
+            }
+        });
+
+        // Initialize
+        loadProducts();
+    </script>
+</body>
+</html>
